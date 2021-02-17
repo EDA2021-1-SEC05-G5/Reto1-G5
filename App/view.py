@@ -25,6 +25,7 @@ import sys
 import controller
 from DISClib.ADT import list as lt
 assert cf
+import time
 
 
 """
@@ -36,8 +37,11 @@ operación solicitada
 
 def printMenu():
     print("Bienvenido")
-    print("1- Cargar información en el catálogo")
-    print("2- ")
+    print("0- Cargar información en el catálogo")
+    print("1- Encontrar buenos videos")
+    print("2- Encontrar videos Tendencia por pais")
+    print("3- Encontrar videos Tendencia por categoria")
+    print("4- Buscar  videos con mas likes")
 
 catalog = None
 
@@ -47,11 +51,32 @@ Menu principal
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
-    if int(inputs[0]) == 1:
+    if int(inputs[0]) == 0:
         print("Cargando información de los archivos ....")
 
+    elif int(inputs[0]) == 1:
+        t1 = time.process_time()
+        print("Se ejecuto el Requerimiento 1")
+        t2 = time.process_time()
+        print("El proceso ha durado", t2 - t1, "segundos\n")
+    
     elif int(inputs[0]) == 2:
-        pass
+        t1 = time.process_time()
+        print("Se ejecuto el Requerimiento 2")
+        t2 = time.process_time()
+        print("El proceso ha durado", t2 - t1, "segundos\n")
+    
+    elif int(inputs[0]) == 3:
+        t1 = time.process_time()
+        print("Se ejecuto el Requerimiento 3")
+        t2 = time.process_time()
+        print("El proceso ha durado", t2 - t1, "segundos\n")
+    
+    elif int(inputs[0]) == 4:
+        t1 = time.process_time()
+        print("Se ejecuto el Requerimiento 4")
+        t2 = time.process_time()
+        print("El proceso ha durado", t2 - t1, "segundos\n")
 
     else:
         sys.exit(0)
