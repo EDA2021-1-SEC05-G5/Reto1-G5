@@ -31,8 +31,91 @@ El controlador se encarga de mediar entre la vista y el modelo.
 
 # Inicialización del Catálogo de libros
 
+def initCatalog():
+    """
+    Llama la funcion de inicializacion del catalogo del modelo.
+    """
+    catalog = model.newCatalog()
+    return catalog
+
+
+
 # Funciones para la carga de datos
+
+def loadData(catalog):
+    """
+    Carga los datos de los archivos y cargar los datos en la
+    estructura de datos
+    """
+    loadVideos(catalog)
+    #loadTags(catalog)
+    #loadVideosTags(catalog)
+    sortVideos(catalog)
+
+
+def loadVideos(catalog):
+    """
+    Carga los libros del archivo.  Por cada libro se toman sus autores y por
+    cada uno de ellos, se crea en la lista de autores, a dicho autor y una
+    referencia al libro que se esta procesando.
+    """
+    videosfile = cf.data_dir + 'videos-small.csv'
+    input_file = csv.DictReader(open(videosfile, encoding='utf-8'))
+    for video in input_file:
+        model.addVideo(catalog, video)
+
+"""
+def loadTags(catalog):
+    
+    #Carga todos los tags del archivo y los agrega a la lista de tags
+    
+    tagsfile = cf.data_dir + 'category-id.csv'
+    input_file = csv.DictReader(open(tagsfile, encoding='utf-8'))
+    for tag in input_file:
+        model.addTag(catalog, tag)
+"""
+"""
+def loadVideosTags(catalog):
+    
+    #Carga la información que asocia tags con libros.
+    
+    booktagsfile = cf.data_dir + 'GoodReads/book_tags.csv'
+    input_file = csv.DictReader(open(booktagsfile, encoding='utf-8'))
+    for booktag in input_file:
+        model.addBookTag(catalog, booktag)
+"""
+
 
 # Funciones de ordenamiento
 
+def sortVideos(catalog):
+    """
+    Ordena los libros por average_rating
+    """
+    model.sortVideos(catalog)
+
+
+
 # Funciones de consulta sobre el catálogo
+
+def getVideosByChannel_title(catalog, authorname):
+    """
+    Retrona los libros de un autor
+    """
+    channel_title = model.getVideosByChannel_title(catalog, authorname)
+    return channel_title
+
+
+def getBestVideos(catalog, number):
+    """
+    Retorna los mejores libros
+    """
+    bestvideos = model.getBestVideos(catalog, number)
+    return bestvideos
+
+
+def countVideosByTag(catalog, tag):
+    """
+    Retorna los libros que fueron etiquetados con el tag
+    """
+    return model.countVideosByTag(catalog, tag)

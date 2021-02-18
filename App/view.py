@@ -29,7 +29,7 @@ import time
 
 
 """
-La vista se encarga de la interacción con el usuario
+La vista se encarga de la interacción con el usuari
 Presenta el menu de opciones y por cada seleccion
 se hace la solicitud al controlador para ejecutar la
 operación solicitada
@@ -38,10 +38,45 @@ operación solicitada
 def printMenu():
     print("Bienvenido")
     print("0- Cargar información en el catálogo")
-    print("1- Encontrar buenos videos")
+    print("1- Encontrar buenos videos por categoria y pais")
     print("2- Encontrar videos Tendencia por pais")
     print("3- Encontrar videos Tendencia por categoria")
     print("4- Buscar  videos con mas likes")
+
+def initCatalog():
+    """
+    Inicializa el catalogo de libros
+    """
+    return controller.initCatalog()
+
+
+def loadData(catalog):
+    """
+    Carga los libros en la estructura de datos
+    """
+    controller.loadData(catalog)
+
+"""
+def printChannel_titleData(channel_title):
+    if author:
+        print('Autor encontrado: ' + author['name'])
+        print('Promedio: ' + str(author['average_rating']))
+        print('Total de libros: ' + str(lt.size(author['books'])))
+        for book in lt.iterator(author['books']):
+            print('Titulo: ' + book['title'] + '  ISBN: ' + book['isbn'])
+    else:
+        print('No se encontro el autor')
+"""
+
+def printBestVideos(videos):
+    size = lt.size(videos)
+    if size:
+        print(' Estos son los mejores videos: ')
+        for video in lt.iterator(videos):
+            print('Titulo: ' + video['title'] + '  views: ' +
+                  video['views'] + ' Likes: ' + video['likes'])
+    else:
+        print('No se encontraron videos')
 
 catalog = None
 
@@ -53,9 +88,21 @@ while True:
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 0:
         print("Cargando información de los archivos ....")
+        catalog = initCatalog()
+        loadData(catalog)
+        print('Videos cargados: ' + str(lt.size(catalog['title'])))
+        print('Nombres de canales cargados: ' + str(lt.size(catalog['channel_title'])))
+        #print('Géneros cargados: ' + str(lt.size(catalog['tags'])))
+        #print('Asociación de Géneros a Libros cargados: ' +
+              #str(lt.size(catalog['video_tags'])))
 
     elif int(inputs[0]) == 1:
         t1 = time.process_time()
+        category = str(input("Elija la categotia: "))
+        country = str(input("Elija un pais: "))
+        numeros = int(input("Elija un numero de videos: "))
+        mejores = controller.getBestVideos(category, numeros)
+        printBestVideos(mejores)
         print("Se ejecuto el Requerimiento 1")
         t2 = time.process_time()
         print("El proceso ha durado", t2 - t1, "segundos\n")
