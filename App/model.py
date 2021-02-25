@@ -37,7 +37,7 @@ los mismos.
 
 # Construccion de modelos
 
-def newCatalog():
+def newCatalog(opcion):
     """
     Inicializa el catálogo de libros. Crea una lista vacia para guardar
     todos los libros, adicionalmente, crea una lista vacia para los autores,
@@ -49,12 +49,20 @@ def newCatalog():
                'tags': None,
                'video_tags': None}
 
-    catalog['title'] = lt.newList()
-    catalog['channel_title'] = lt.newList('ARRAY_LIST',
+    if opcion == "ARRAY_LIST":
+        catalog['title'] = lt.newList()
+        catalog['channel_title'] = lt.newList('ARRAY_LIST',
                                     cmpfunction=comparechannel_titles)
-    catalog['tags'] = lt.newList('ARRAY_LIST',
+        catalog['tags'] = lt.newList('ARRAY_LIST',
                                  cmpfunction=comparetagnames)
-    catalog['videos_tags'] = lt.newList('ARRAY_LIST')
+        catalog['videos_tags'] = lt.newList('ARRAY_LIST')
+    elif opcion == "LINKED_LIST":
+        catalog['title'] = lt.newList()
+        catalog['channel_title'] = lt.newList('LINKED_LIST',
+                                    cmpfunction=comparechannel_titles)
+        catalog['tags'] = lt.newList('LINKED_LIST',
+                                 cmpfunction=comparetagnames)
+        catalog['videos_tags'] = lt.newList('LINKED_LIST')
 
     return catalog
 

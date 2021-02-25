@@ -43,11 +43,11 @@ def printMenu():
     print("3- Encontrar videos Tendencia por categoria")
     print("4- Buscar  videos con mas likes")
 
-def initCatalog():
+def initCatalog(opcion):
     """
     Inicializa el catalogo de libros
     """
-    return controller.initCatalog()
+    return controller.initCatalog(opcion)
 
 
 def loadData(catalog):
@@ -87,8 +87,9 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 0:
+        opcion = str(input("Con que tipo quiere abrir los datos... ARRAY_LIST o LINKED_LIST\n"))
         print("Cargando información de los archivos ....")
-        catalog = initCatalog()
+        catalog = initCatalog(opcion)
         loadData(catalog)
         print('Videos cargados: ' + str(lt.size(catalog['title'])))
         print('Nombres de canales cargados: ' + str(lt.size(catalog['channel_title'])))
