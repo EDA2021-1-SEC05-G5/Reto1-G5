@@ -54,18 +54,18 @@ def newCatalog(opcion):
                 }
 
     if opcion == "ARRAY_LIST":
-        catalog['title'] = lt.newList()
+        catalog['title'] = lt.newList("ARRAY_LIST", cmpfunction = comparevideo_id)
         #catalog['channel_title'] = lt.newList('ARRAY_LIST',
                                     #cmpfunction=comparechannel_titles)
-        catalog['views'] = lt.newList('ARRAY_LIST',
-                                 cmpfunction=cmpVideosByViews)
+        #catalog['views'] = lt.newList('ARRAY_LIST',
+                                 #cmpfunction=cmpVideosByViews)
         #catalog['videos_tags'] = lt.newList('ARRAY_LIST')
     elif opcion == "LINKED_LIST":
-        catalog['title'] = lt.newList()
+        catalog['title'] = lt.newList("LINKED_LIST", cmpfunction = comparevideo_id)
         #catalog['channel_title'] = lt.newList('LINKED_LIST',
                                     #cmpfunction=comparechannel_titles)
-        catalog['views'] = lt.newList('LINKED_LIST',
-                                 cmpfunction=cmpVideosByViews)
+        #catalog['views'] = lt.newList('LINKED_LIST',
+         #                        cmpfunction=cmpVideosByViews)
         #catalog['videos_tags'] = lt.newList('LINKED_LIST')
 
     return catalog
@@ -199,6 +199,13 @@ def comparechannel_titles(channel_titlename1, channel_title):
         return 0
     return -1
 
+#
+
+def comparevideo_id(video_id, video):
+    return video_id == video["video_id"]
+
+#
+
 
 def cmpVideosByViews(video1, video2):
     """
@@ -218,7 +225,7 @@ def comparetagnames(name, tag):
 # Funciones de ordenamiento
 
 def sortVideos(size, catalog, ordena):
-    sub_list = lt.subList(catalog['views'], 0, size)
+    sub_list = lt.subList(catalog['title'], 1, size)
     sub_list = sub_list.copy()
     start_time = time.process_time() 
 
