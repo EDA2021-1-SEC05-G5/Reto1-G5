@@ -38,7 +38,7 @@ operación solicitada
 def printMenu():
     print("Bienvenido")
     print("0- Cargar información en el catálogo")
-    print("1- Encontrar buenos videos por categoria y pais")
+    print("1- Cargar Videos por Views")
     print("2- Encontrar videos Tendencia por pais")
     print("3- Encontrar videos Tendencia por categoria")
     print("4- Buscar  videos con mas likes")
@@ -92,18 +92,16 @@ while True:
         catalog = initCatalog(opcion)
         loadData(catalog)
         print('Videos cargados: ' + str(lt.size(catalog['title'])))
-        print('Nombres de canales cargados: ' + str(lt.size(catalog['channel_title'])))
-        #print('Géneros cargados: ' + str(lt.size(catalog['tags'])))
-        #print('Asociación de Géneros a Libros cargados: ' +
-              #str(lt.size(catalog['video_tags'])))
+        "print('Nombres de canales cargados: ' + str(lt.size(catalog['channel_title'])))"
 
     elif int(inputs[0]) == 1:
         t1 = time.process_time()
-        category = str(input("Elija la categotia: "))
-        country = str(input("Elija un pais: "))
-        numeros = int(input("Elija un numero de videos: "))
-        mejores = controller.getBestVideos(category, numeros)
-        printBestVideos(mejores)
+        size = int(input("Indique tamaño de la muestra: "))
+        #n_datos = int(input("Seleccione el numero de datos: "))
+        ordena = input("Elija entre shell sort, insertion sort y selection sort: ")
+        result = controller.ordenamiento(size, catalog, ordena)
+        print("Para la muestra de", size, " elementos, el tiempo (mseg) es: ",
+                                          str(result[0]))
         print("Se ejecuto el Requerimiento 1")
         t2 = time.process_time()
         print("El proceso ha durado", t2 - t1, "segundos\n")

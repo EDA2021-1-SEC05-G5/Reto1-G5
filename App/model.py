@@ -28,6 +28,9 @@
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Sorting import insertionsort
+from DISClib.Algorithms.Sorting import selectionsort
+import time
 assert cf
 
 """
@@ -45,24 +48,25 @@ def newCatalog(opcion):
     generos y libros. Retorna el catalogo inicializado.
     """
     catalog = {'title': None,
-               'channel_title': None,
-               'tags': None,
-               'video_tags': None}
+               #'channel_title': None,
+               'views': None,
+               #'video_tags': None
+                }
 
     if opcion == "ARRAY_LIST":
         catalog['title'] = lt.newList()
-        catalog['channel_title'] = lt.newList('ARRAY_LIST',
-                                    cmpfunction=comparechannel_titles)
-        catalog['tags'] = lt.newList('ARRAY_LIST',
-                                 cmpfunction=comparetagnames)
-        catalog['videos_tags'] = lt.newList('ARRAY_LIST')
+        #catalog['channel_title'] = lt.newList('ARRAY_LIST',
+                                    #cmpfunction=comparechannel_titles)
+        catalog['views'] = lt.newList('ARRAY_LIST',
+                                 cmpfunction=cmpVideosByViews)
+        #catalog['videos_tags'] = lt.newList('ARRAY_LIST')
     elif opcion == "LINKED_LIST":
         catalog['title'] = lt.newList()
-        catalog['channel_title'] = lt.newList('LINKED_LIST',
-                                    cmpfunction=comparechannel_titles)
-        catalog['tags'] = lt.newList('LINKED_LIST',
-                                 cmpfunction=comparetagnames)
-        catalog['videos_tags'] = lt.newList('LINKED_LIST')
+        #catalog['channel_title'] = lt.newList('LINKED_LIST',
+                                    #cmpfunction=comparechannel_titles)
+        catalog['views'] = lt.newList('LINKED_LIST',
+                                 cmpfunction=cmpVideosByViews)
+        #catalog['videos_tags'] = lt.newList('LINKED_LIST')
 
     return catalog
 
@@ -74,18 +78,18 @@ def addVideo(catalog, video):
     # Se adiciona el libro a la lista de libros
     lt.addLast(catalog['title'], video)
     # Se obtienen los autores del libro
-    channel_titles = video['channel_title'].split(",")
+    #channel_titles = video['channel_title'].split(",")
     # Cada autor, se crea en la lista de libros del catalogo, y se
     # crea un libro en la lista de dicho autor (apuntador al libro)
-    for channel_title in channel_titles:
-        addVideoChannel_title(catalog, channel_title.strip(), video)
+    #for channel_title in channel_titles:
+    #    addVideoChannel_title(catalog, channel_title.strip(), video)
 
-
+"""
 def addVideoChannel_title(catalog, authorname, video):
-    """
-    Adiciona un autor a lista de autores, la cual guarda referencias
-    a los libros de dicho autor
-    """
+    
+    #Adiciona un autor a lista de autores, la cual guarda referencias
+    #a los libros de dicho autor
+    
     channel_titles = catalog['channel_title']
     poschannel_title = lt.isPresent(channel_titles, authorname)
     if poschannel_title > 0:
@@ -94,7 +98,7 @@ def addVideoChannel_title(catalog, authorname, video):
         channel_title = newchannel_title(authorname)
         lt.addLast(channel_titles, channel_title)
     lt.addLast(channel_title['title'], video)
-
+"""
 """
 def addTag(catalog, tag):
     
@@ -196,8 +200,14 @@ def comparechannel_titles(channel_titlename1, channel_title):
     return -1
 
 
-def comparelikes(video1, video2):
-    return (float(video1['likes']) > float(video2['likes']))
+def cmpVideosByViews(video1, video2):
+    """
+    Devuelve verdadero (True) si los 'views' de video1 son menores que los del video2
+    Args:
+    video1: informacion del primer video que incluye su valor 'views'
+    video2: informacion del segundo video que incluye su valor 'views'
+    """
+    return (float(video1['views']) < float(video2['views']))
 
 
 def comparetagnames(name, tag):
@@ -207,5 +217,17 @@ def comparetagnames(name, tag):
 
 # Funciones de ordenamiento
 
-def sortVideos(catalog):
-    sa.sort(catalog['title'], comparelikes)
+def sortVideos(size, catalog, ordena):
+    sub_list = lt.subList(catalog['views'], 0, size)
+    sub_list = sub_list.copy()
+    start_time = time.process_time() 
+
+    if ordena == "selection":
+        sorted_list = selectionsort.sort(sub_list, cmpVideosByViews)
+    elif ordena == "insertion":
+        sorted_list = insertionsort.sort(sub_list, cmpVideosByViews)
+    else:
+        sorted_list = sa.sort(sub_list, cmpVideosByViews)
+    stop_time = time.process_time()
+    elapsed_time_mseg = (stop_time - start_time)*1000
+    return elapsed_time_mseg, sorted_list

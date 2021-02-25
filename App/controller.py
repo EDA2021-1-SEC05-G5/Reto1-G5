@@ -50,7 +50,7 @@ def loadData(catalog):
     loadVideos(catalog)
     #loadTags(catalog)
     #loadVideosTags(catalog)
-    sortVideos(catalog)
+    #sortVideos(size, catalog, ordena)
 
 
 def loadVideos(catalog):
@@ -59,7 +59,7 @@ def loadVideos(catalog):
     cada uno de ellos, se crea en la lista de autores, a dicho autor y una
     referencia al libro que se esta procesando.
     """
-    videosfile = cf.data_dir + 'videos-small.csv'
+    videosfile = cf.data_dir + 'videos-large.csv'
     input_file = csv.DictReader(open(videosfile, encoding='utf-8'))
     for video in input_file:
         model.addVideo(catalog, video)
@@ -88,11 +88,11 @@ def loadVideosTags(catalog):
 
 # Funciones de ordenamiento
 
-def sortVideos(catalog):
+def sortVideos(size, catalog, ordena):
     """
     Ordena los libros por average_rating
     """
-    model.sortVideos(catalog)
+    model.sortVideos(size, catalog, ordena)
 
 
 
@@ -119,3 +119,6 @@ def countVideosByTag(catalog, tag):
     Retorna los libros que fueron etiquetados con el tag
     """
     return model.countVideosByTag(catalog, tag)
+
+def ordenamiento(n_datos, estructura, ordena):
+    return model.sortVideos(n_datos, estructura, ordena)
