@@ -30,6 +30,8 @@ from DISClib.ADT import list as lt
 from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.Algorithms.Sorting import insertionsort
 from DISClib.Algorithms.Sorting import selectionsort
+from DISClib.Algorithms.Sorting import mergesort
+from DISClib.Algorithms.Sorting import quicksort
 import time
 assert cf
 
@@ -233,6 +235,10 @@ def sortVideos(size, catalog, ordena):
         sorted_list = selectionsort.sort(sub_list, cmpVideosByViews)
     elif ordena == "insertion":
         sorted_list = insertionsort.sort(sub_list, cmpVideosByViews)
+    elif ordena == "merge":
+        sorted_list = mergesort.sort(sub_list, cmpVideosByViews)
+    elif ordena == "quick":
+        sorted_list = quicksort.sort(sub_list, cmpVideosByViews)
     else:
         sorted_list = sa.sort(sub_list, cmpVideosByViews)
     stop_time = time.process_time()

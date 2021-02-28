@@ -37,9 +37,9 @@ operación solicitada
 
 def printMenu():
     print("Bienvenido")
-    print("0- Cargar información en el catálogo")
-    print("1- Cargar Videos por Views")
-    print("2- Encontrar videos Tendencia por pais")
+    print("0- Cargar datos del .csv")
+    print("1- Cargar información en el catálogo")
+    print("2- Cargar información en el catálogo por Merge o Quick")
     print("3- Encontrar videos Tendencia por categoria")
     print("4- Buscar  videos con mas likes")
 
@@ -97,7 +97,6 @@ while True:
     elif int(inputs[0]) == 1:
         t1 = time.process_time()
         size = int(input("Indique tamaño de la muestra: "))
-        #n_datos = int(input("Seleccione el numero de datos: "))
         ordena = input("Elija entre shell sort, insertion sort y selection sort: ")
         result = controller.ordenamiento(size, catalog, ordena)
         print("Para la muestra de", size, " elementos, el tiempo (mseg) es: ",
@@ -108,6 +107,11 @@ while True:
     
     elif int(inputs[0]) == 2:
         t1 = time.process_time()
+        size = int(input("Indique tamaño de la muestra: "))
+        ordena = input("Elija entre merge sort y quick sort: ")
+        result = controller.ordenamiento(size, catalog, ordena)
+        print("Para la muestra de", size, " elementos, el tiempo (mseg) es: ",
+                                          str(result[0]))
         print("Se ejecuto el Requerimiento 2")
         t2 = time.process_time()
         print("El proceso ha durado", t2 - t1, "segundos\n")
