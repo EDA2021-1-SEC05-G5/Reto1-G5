@@ -1,7 +1,7 @@
 # ISIS1225 - Librerias de soporte
 
-- Req. 2 - Eduardo Herrera, 201912865, ej.herreraa@uniandes.edu.co
-- Req. 3 - Juan Jose Sierra, 202013642, j.sierraag@uniandes.edu.co
+- Eduardo Herrera, 201912865, ej.herreraa@uniandes.edu.co
+- Juan Jose Sierra, 202013642, j.sierraag@uniandes.edu.co
 
 Este proyecto contiene los Tipos abstractos de datos, estructuras de datos y algoritmos requeridos por el curso ISIS1225-Estructuras de Datos y Algoritmos
 
