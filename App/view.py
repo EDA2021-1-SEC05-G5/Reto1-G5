@@ -31,7 +31,7 @@ default_limit = 1000000
 sys.setrecursionlimit(default_limit*10) 
 
 """
-La vista se encarga de la interacción con el usuari
+La vista se encarga de la interacción con el usuario
 Presenta el menu de opciones y por cada seleccion
 se hace la solicitud al controlador para ejecutar la
 operación solicitada
@@ -40,10 +40,10 @@ operación solicitada
 def printMenu():
     print("\nBienvenido")
     print("0- Cargar datos del .csv")
-    print("1- Req 1 - Videos con más views (categoría, país y n)")
+    print("1- Req 1 - Videos con más views (categoría, país y cantidad)")
     print("2- Req 2 - Video tendencia (país)")
     print("3- Req 3 - Video tendencia (categoría)")
-    print("4- Req 4 - Videos con más likes (tag, país y n)")
+    print("4- Req 4 - Videos con más likes (tag, país y cantidad)")
 
 def initCatalog():
     """
@@ -51,24 +51,15 @@ def initCatalog():
     """
     return controller.initCatalog()
 
-
 def loadData(catalog):
     """
     Carga los libros en la estructura de datos
     """
     controller.loadData(catalog)
 
-"""
-def printChannel_Data(channel_title):
-    if author:
-        print('Autor encontrado: ' + author['name'])
-        print('Promedio: ' + str(author['average_rating']))
-        print('Total de libros: ' + str(lt.size(author['books'])))
-        for book in lt.iterator(author['books']):
-            print('Titulo: ' + book['title'] + '  ISBN: ' + book['isbn'])
-    else:
-        print('No se encontro el autor')
-"""
+
+
+# Funciones para imprimir los datos en la consola
 
 def printBestVideos(videos):
     size = lt.size(videos)
@@ -80,8 +71,54 @@ def printBestVideos(videos):
     else:
         print('No se encontraron videos')
 
+def printInfoPrimerVideo(catalog):
+    print('\nInfo del primer video:\n',
+        "Título del video: ",(lt.firstElement(catalog['videos']))['title'], 
+        "\nTítulo del canal del video: ",(lt.firstElement(catalog['videos']))['channel_title'], 
+        "\nFecha de tendencia del video: ",str((lt.firstElement(catalog['videos']))['trending_date']),
+        "\nPaís del video: ",(lt.firstElement(catalog['videos']))['country'],
+        "\nViews del video: ",(lt.firstElement(catalog['videos']))['views'],
+        "\nLikes del video: ",(lt.firstElement(catalog['videos']))['likes'],
+        "\nDislikes del video: ",(lt.firstElement(catalog['videos']))['dislikes'])
+
+def printVideosMasViews(datos):
+    lista = datos["elements"]
+    for v in lista:
+        print("\nFecha de tendencia: ",v['trending_date'])
+        print("Nombre del video: ", v['title'])
+        print("Nombre del canal: ", v['channel_title'])
+        print("Fecha de publicación: ", v['publish_time'])
+        print("Reproducciones: ", v['views'])
+        print("Likes: ", v['likes'])
+        print("Dislikes: ", v['dislikes'])
+
+def printTendenciaPais(datos):
+    print("\nNombre del video: ", datos[0]['title'])
+    print("Nombre del canal: ", datos[0]['channel_title'])
+    print("Pais: ", datos[0]['country'])
+    print("Número de días como tendencia: ", datos[1])
+
+def printTendenciaCategoria(datos):
+    print("\nNombre del video: ", datos[0]['title'])
+    print("Nombre del canal: ", datos[0]['channel_title'])
+    print("Categoria: ", datos[0]['category_id'])
+    print("Número de días como tendencia: ", datos[1])
+
+def printVideosMasLikes(datos):
+    lista = datos["elements"]
+    for v in lista:
+        print("\nNombre del video: ", v['title'])
+        print("Nombre del canal: ", v['channel_title'])
+        print("Fecha de publicación : ", v['publish_time'])
+        print("Reproducciones: ", v['views'])
+        print("Likes: ", v['likes'])
+        print("Dislikes: ", v['dislikes'])
+        print("Tags: ", v['tags'])
+
 
 catalog = None
+
+
 
 """
 Menu principal
@@ -92,23 +129,13 @@ while True:
 
     if int(inputs[0]) == 0:
 
-        #opcion = "ARRAY_LIST"
-        #ordena = 'merge' 
-
         print("Cargando información de los archivos...")
         catalog = initCatalog()
         loadData(catalog)
 
         print('Videos cargados: ' + str(lt.size(catalog['videos'])))
 
-        print('\nInfo del primer video:\n',
-        "Título del video: ",(lt.firstElement(catalog['videos']))['title'], 
-        "\nTítulo del canal del video: ",(lt.firstElement(catalog['videos']))['channel_title'], 
-        "\nFecha de tendencia del video: ",str((lt.firstElement(catalog['videos']))['trending_date']),
-        "\nPaís del video: ",(lt.firstElement(catalog['videos']))['country'],
-        "\nViews del video: ",(lt.firstElement(catalog['videos']))['views'],
-        "\nLikes del video: ",(lt.firstElement(catalog['videos']))['likes'],
-        "\nDislikes del video: ",(lt.firstElement(catalog['videos']))['dislikes'])
+        print(printInfoPrimerVideo(catalog))
 
         print('\nId y categorías: ')
         for c in lt.iterator(catalog['category']):
@@ -121,31 +148,20 @@ while True:
         cantidad = int(input('Ingrese el número de videos: '))
 
         respuesta = controller.requerimiento_1(categoria, pais, cantidad, catalog)
-        lista = respuesta["elements"]
 
-        for v in lista:
-            print("\nFecha de tendencia: ",v['trending_date'])
-            print("Nombre del video: ", v['title'])
-            print("Nombre del canal: ", v['channel_title'])
-            print("Fecha de publicación : ", v['publish_time'])
-            print("Reproducciones: ", v['views'])
-            print("Likes: ", v['likes'])
-            print("Dislikes: ", v['dislikes'])
+        print(printVideosMasViews(respuesta))
 
     elif int(inputs[0]) == 2:
 
         pais = input("Ingrese el país: ")
         respuesta = controller.requerimiento_2(pais, catalog)
-        print(respuesta)
+        print(printTendenciaPais(respuesta))
 
     elif int(inputs[0]) == 3:
 
         categoria = input('Ingrese la categoría: ')
         respuesta = controller.requerimiento_3(categoria, catalog)
-        print(respuesta)
-        #for book in lt.iterat
-        # or(respuesta):
-        #    print(book['video_id']+"/",book['trending_date'],"/"+book['title'])
+        print(printTendenciaCategoria(respuesta))
 
     elif int(inputs[0]) == 4:
 
@@ -154,7 +170,7 @@ while True:
         cantidad = int(input('Ingrese el número de videos: '))
 
         respuesta = controller.requerimiento_4(tag, pais, cantidad, catalog)
-        print(respuesta)
+        print(printVideosMasLikes(respuesta))
 
     else:
         sys.exit(0)

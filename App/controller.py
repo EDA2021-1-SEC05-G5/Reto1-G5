@@ -41,6 +41,7 @@ def initCatalog():
 
 
 
+
 # Funciones para la carga de datos
 
 def loadData(catalog):
@@ -51,12 +52,11 @@ def loadData(catalog):
     loadVideos(catalog)
     loadCategories(catalog)
 
-
 def loadVideos(catalog):
     """
     Carga los libros del archivo.  Por cada video se toman los datos necesarios:
     video id, trending date, category id, views, nombre del canal, país, nombre del 
-    video, likes, dislikes, fecha de publicación y likes.
+    video, likes, dislikes, fecha de publicación, likes y tags.
     """
 
     videosfile = cf.data_dir + 'videos-large.csv'
@@ -94,8 +94,6 @@ def loadCategories (catalog):
 
 
 
-
-
 # Funciones de ordenamiento
 
 #1
@@ -125,7 +123,6 @@ def sortVideosByLikes (lista_filtros):
     Ordena los videos por likes.
     """
     return model.sortVideosByLikes(lista_filtros)
-
 
 
 
@@ -232,95 +229,5 @@ def requerimiento_4 (tag, pais, cantidad, catalog):
     lista_acortada = acortar_lista (sorted_list, cantidad)
 
     return lista_acortada
-
-
-
-
-
-
-
-
-
-###
-"""
-def sortLikes(tag, pais, cantidad, catalog):
-
-    nuevo_dict = model.Req4(tag, pais, catalog)
-    return model.sortLikes(cantidad, catalog, nuevo_dict)
-
-def sortLikes1(tag, pais, cantidad, catalog):
-
-    lista_ordenada = model.sortLikes1(catalog)
-    return model.Req41(tag, pais, cantidad, lista_ordenada)
-"""
-###
-
-
-
-#10/03
-"""
-# Funciones para la carga de datos
-
-def loadData(catalog):
-    
-    Carga los datos de los archivos y cargar los datos en la
-    estructura de datos
-    
-    loadVideos(catalog)
-    loadCategories(catalog)
-    #loadTags(catalog)
-    #loadVideosTags(catalog)
-    #sortVideos(size, catalog, ordena)
-
-def loadTags(catalog):
-    
-    #Carga todos los tags del archivo y los agrega a la lista de tags
-    
-    tagsfile = cf.data_dir + 'category-id.csv'
-    input_file = csv.DictReader(open(tagsfile, encoding='utf-8'))
-    for tag in input_file:
-        model.addTag(catalog, tag)
-
-
-
-def loadVideosTags(catalog):
-    
-    #Carga la información que asocia tags con libros.
-    
-    booktagsfile = cf.data_dir + 'GoodReads/book_tags.csv'
-    input_file = csv.DictReader(open(booktagsfile, encoding='utf-8'))
-    for booktag in input_file:
-        model.addBookTag(catalog, booktag)
-
-
-
-
-
-# Funciones de consulta de catálogo
-
-
-def getVideosByChannel_title(catalog, authorname):
-    
-    Retrona los libros de un autor
-
-    channel_title = model.getVideosByChannel_title(catalog, authorname)
-    return channel_title
-
-
-def getBestVideos(catalog, number):
-    #Retorna los mejores libros
-
-    bestvideos = model.getBestVideos(catalog, number)
-    return bestvideos
-
-
-def countVideosByTag(catalog, tag):
-    #Retorna los libros que fueron etiquetados con el tag
-  
-    return model.countVideosByTag(catalog, tag)
-"""
-
-
-
 
 
