@@ -38,18 +38,18 @@ operación solicitada
 """
 
 def printMenu():
-    print("Bienvenido")
+    print("\nBienvenido")
     print("0- Cargar datos del .csv")
-    print("1- Cargar información en el catálogo")
-    print("2- Cargar información en el catálogo por Merge o Quick")
-    print("3- Encontrar videos Tendencia por categoria")
-    print("4- Buscar  videos con mas likes")
+    print("1- Req 1 - Videos con más views (categoría, país y n)")
+    print("2- Req 2 - Video tendencia (país)")
+    print("3- Req 3 - Video tendencia (categoría)")
+    print("4- Req 4 - Videos con más likes (tag, país y n)")
 
-def initCatalog(opcion):
+def initCatalog():
     """
     Inicializa el catalogo de libros
     """
-    return controller.initCatalog(opcion)
+    return controller.initCatalog()
 
 
 def loadData(catalog):
@@ -59,7 +59,7 @@ def loadData(catalog):
     controller.loadData(catalog)
 
 """
-def printChannel_titleData(channel_title):
+def printChannel_Data(channel_title):
     if author:
         print('Autor encontrado: ' + author['name'])
         print('Promedio: ' + str(author['average_rating']))
@@ -80,6 +80,7 @@ def printBestVideos(videos):
     else:
         print('No se encontraron videos')
 
+
 catalog = None
 
 """
@@ -88,47 +89,72 @@ Menu principal
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
-    if int(inputs[0]) == 0:
-        opcion = str(input("Con que tipo quiere abrir los datos... ARRAY_LIST o LINKED_LIST\n"))
-        print("Cargando información de los archivos ....")
-        catalog = initCatalog(opcion)
-        loadData(catalog)
-        print('Videos cargados: ' + str(lt.size(catalog['title'])))
-        "print('Nombres de canales cargados: ' + str(lt.size(catalog['channel_title'])))"
 
+    if int(inputs[0]) == 0:
+
+        #opcion = "ARRAY_LIST"
+        #ordena = 'merge' 
+
+        print("Cargando información de los archivos...")
+        catalog = initCatalog()
+        loadData(catalog)
+
+        print('Videos cargados: ' + str(lt.size(catalog['videos'])))
+
+        print('\nInfo del primer video:\n',
+        "Título del video: ",(lt.firstElement(catalog['videos']))['title'], 
+        "\nTítulo del canal del video: ",(lt.firstElement(catalog['videos']))['channel_title'], 
+        "\nFecha de tendencia del video: ",str((lt.firstElement(catalog['videos']))['trending_date']),
+        "\nPaís del video: ",(lt.firstElement(catalog['videos']))['country'],
+        "\nViews del video: ",(lt.firstElement(catalog['videos']))['views'],
+        "\nLikes del video: ",(lt.firstElement(catalog['videos']))['likes'],
+        "\nDislikes del video: ",(lt.firstElement(catalog['videos']))['dislikes'])
+
+        print('\nId y categorías: ')
+        for c in lt.iterator(catalog['category']):
+            print(c['id'],c["name"])
+    
     elif int(inputs[0]) == 1:
-        t1 = time.process_time()
-        size = int(input("Indique tamaño de la muestra: "))
-        ordena = input("Elija entre shell sort, insertion sort y selection sort: ")
-        result = controller.ordenamiento(size, catalog, ordena)
-        print("Para la muestra de", size, " elementos, el tiempo (mseg) es: ",
-                                          str(result[0]))
-        print("Se ejecuto el Requerimiento 1")
-        t2 = time.process_time()
-        print("El proceso ha durado", t2 - t1, "segundos\n")
-    
+
+        categoria = input('Ingrese la categoría: ')
+        pais = input('Ingrese el país: ')
+        cantidad = int(input('Ingrese el número de videos: '))
+
+        respuesta = controller.requerimiento_1(categoria, pais, cantidad, catalog)
+        lista = respuesta["elements"]
+
+        for v in lista:
+            print("\nFecha de tendencia: ",v['trending_date'])
+            print("Nombre del video: ", v['title'])
+            print("Nombre del canal: ", v['channel_title'])
+            print("Fecha de publicación : ", v['publish_time'])
+            print("Reproducciones: ", v['views'])
+            print("Likes: ", v['likes'])
+            print("Dislikes: ", v['dislikes'])
+
     elif int(inputs[0]) == 2:
-        t1 = time.process_time()
-        size = int(input("Indique tamaño de la muestra: "))
-        ordena = input("Elija entre merge sort y quick sort: ")
-        result = controller.ordenamiento(size, catalog, ordena)
-        print("Para la muestra de", size, " elementos, el tiempo (mseg) es: ",
-                                          str(result[0]))
-        print("Se ejecuto el Requerimiento 2")
-        t2 = time.process_time()
-        print("El proceso ha durado", t2 - t1, "segundos\n")
-    
+
+        pais = input("Ingrese el país: ")
+        respuesta = controller.requerimiento_2(pais, catalog)
+        print(respuesta)
+
     elif int(inputs[0]) == 3:
-        t1 = time.process_time()
-        print("Se ejecuto el Requerimiento 3")
-        t2 = time.process_time()
-        print("El proceso ha durado", t2 - t1, "segundos\n")
-    
+
+        categoria = input('Ingrese la categoría: ')
+        respuesta = controller.requerimiento_3(categoria, catalog)
+        print(respuesta)
+        #for book in lt.iterat
+        # or(respuesta):
+        #    print(book['video_id']+"/",book['trending_date'],"/"+book['title'])
+
     elif int(inputs[0]) == 4:
-        t1 = time.process_time()
-        print("Se ejecuto el Requerimiento 4")
-        t2 = time.process_time()
-        print("El proceso ha durado", t2 - t1, "segundos\n")
+
+        tag = input('Ingrese el tag: ')
+        pais = input('Ingrese el país: ')
+        cantidad = int(input('Ingrese el número de videos: '))
+
+        respuesta = controller.requerimiento_4(tag, pais, cantidad, catalog)
+        print(respuesta)
 
     else:
         sys.exit(0)
