@@ -66,16 +66,16 @@ def newCatalog():
 # Funciones para agregar informacion al catalogo 
 
 def addVideo(catalog, video):
-    # Se adiciona el libro a la lista de libros
+    """
+    Añade un video al final, de la lista recibida
+    """
     lt.addLast(catalog['videos'], video)
-    # Se obtienen los autores del libro
-    #channel_titles = video['channel_title'].split(",")
-    # Cada autor, se crea en la lista de libros del catalogo, y se
-    # crea un libro en la lista de dicho autor (apuntador al libro)
-    #for channel_title in channel_titles:
-    #    addVideoChannel_title(catalog, channel_title.strip(), video)
+
 
 def addCategory(catalog, category):
+    """
+    Añade una categoria al final, de la lista recibida
+    """
     lt.addLast(catalog['category'], category)
 
 
@@ -86,7 +86,9 @@ def addCategory(catalog, category):
 
 #1 y 3
 def get_id_categoria (categoria, catalog):
-
+    """
+    Busca una categoria en especifica del catalog, y retorna su respectivo id
+    """
     id_categoria = None
 
     for cate in lt.iterator(catalog['category']):
@@ -98,7 +100,11 @@ def get_id_categoria (categoria, catalog):
 
 #1
 def filtrar_pais_categoria (id_categoria, pais, catalog):
-
+    """
+    Crea una lista nueva para ordenar los datos segun su id.
+    Y recorre la lista dada, para guardar en la nueva lista 
+    solo los videos que correspondan con el id y el pais
+    """
     nueva_lista = lt.newList("ARRAY_LIST", cmpfunction = comparevideo_id1)
 
     for x in lt.iterator(catalog['videos']):
@@ -109,6 +115,11 @@ def filtrar_pais_categoria (id_categoria, pais, catalog):
 
 #2
 def filtrar_pais (pais, catalog):
+    """
+    Crea una lista nueva para ordenar los datos segun su id.
+    Y recorre la lista dada, para guardar en la nueva lista 
+    solo los videos que correspondan con el respectivo pais
+    """
     lista_pais = lt.newList("ARRAY_LIST", cmpfunction = comparevideo_id1)
 
     for x in lt.iterator(catalog['videos']):
@@ -148,7 +159,12 @@ def getTendencia2(sorted_list):
 
 #3
 def filtrar_categoria (id_categoria, catalog):
-
+    """
+    Crea una lista nueva para ordenar los datos segun su id y su trending date.
+    Y recorre la lista dada, para guardar en la nueva lista 
+    solo los videos que correspondan con el respectivo id
+    Ignorando los que su id sea "#NANE?"
+    """
     nueva_lista = lt.newList("ARRAY_LIST", cmpfunction = cmpVideosByID_date)
 
     for x in lt.iterator(catalog['videos']):
@@ -193,6 +209,13 @@ def getTendencia3 (sorted_list):
 
 #4
 def filtrar_pais_tag (tag, pais, catalog):
+    """
+    Crea una lista nueva para ordenar los datos segun sus likes.
+    Y recorre la lista dada, para guardar en la nueva lista 
+    solo los videos que correspondan con el pais dado,
+    y que tengan en sus id's el id dado.
+    Antes de leer los tag, se dividen por "|" para poderlos leer bien
+    """
     nueva_lista = lt.newList("ARRAY_LIST", cmpfunction = cmpVideosByLikes)
 
     for x in lt.iterator(catalog['videos']):
@@ -206,7 +229,10 @@ def filtrar_pais_tag (tag, pais, catalog):
 
 #4
 def acortar_lista (sorted_list, cantidad):
-
+    """
+    Crea una lista nueva para ordenar los datos segun sus likes.
+    Y va guardando unicamente los datos que tienen diferente title
+    """
     lista_final = lt.newList("ARRAY_LIST", cmpfunction = cmpVideosByLikes)
     
     for x in lt.iterator(sorted_list):
@@ -234,9 +260,22 @@ def acortar_lista (sorted_list, cantidad):
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 def comparevideo_id1(video1, video2):
+    """
+    Devuelve verdadero (True) si los 'id' de video1 son menores que los del video2
+    Args:
+    video1: informacion del primer video que incluye su valor 'video_id'
+    video2: informacion del segundo video que incluye su valor 'video_id'
+    """
     return video1["video_id"] < video2["video_id"]
 
 def cmpVideosByID_date (video1, video2):
+    """
+    Devuelve verdadero (True) si los 'id' de video1 son menores que los del video2
+    Args:
+    video1: informacion del primer video que incluye su valor 'video_id'
+    video2: informacion del segundo video que incluye su valor 'video_id'
+    Y si los id son iguales los compara por su trending date
+    """
     if video1['video_id'] != video2['video_id']:
         return video1["video_id"] < video2["video_id"]   
     else:
@@ -244,7 +283,7 @@ def cmpVideosByID_date (video1, video2):
 
 def cmpVideosByViews(video1, video2):
     """
-    Devuelve verdadero (True) si los 'views' de video1 son menores que los del video2
+    Devuelve verdadero (True) si los 'views' de video1 son mayores que los del video2
     Args:
     video1: informacion del primer video que incluye su valor 'views'
     video2: informacion del segundo video que incluye su valor 'views'
@@ -252,7 +291,12 @@ def cmpVideosByViews(video1, video2):
     return (float(video1['views']) > float(video2['views']))
 
 def cmpVideosByLikes(video1, video2):
-
+    """
+    Devuelve verdadero (True) si los 'likes' de video1 son mayores que los del video2
+    Args:
+    video1: informacion del primer video que incluye su valor 'likes'
+    video2: informacion del segundo video que incluye su valor 'likes'
+    """
     return (float(video1['likes']) > float(video2['likes']))
 
 
@@ -263,7 +307,10 @@ def cmpVideosByLikes(video1, video2):
 
 #1
 def sortVideosByViews (lista_filtros, cantidad):
-
+    """
+    Ordena la lista recibida organizando los datos segun sus Views
+    Y crea una lista nueva para guardar los datos allí, para retornar su copia
+    """
     sorted_list = mergesort.sort(lista_filtros, cmpVideosByViews)
 
     sub_list = lt.subList(sorted_list, 1, cantidad)
@@ -273,21 +320,27 @@ def sortVideosByViews (lista_filtros, cantidad):
 
 #2
 def sortVideosByID (filtro_pais):
-
+    """
+    Ordena la lista recibida organizando los datos segun sus id
+    """
     sorted_list = mergesort.sort(filtro_pais, comparevideo_id1)
 
     return sorted_list 
 
 #3
 def sortVideosByID_date (filtro_categoria):
-    
+    """
+    Ordena la lista recibida organizando los datos segun sus id o sus trending date
+    """
     sorted_list = mergesort.sort(filtro_categoria, cmpVideosByID_date)
 
     return sorted_list
 
 #4
 def sortVideosByLikes (lista_filtros):
-
+    """
+    Ordena la lista recibida organizando los datos segun sus Likes
+    """
     sorted_list = mergesort.sort(lista_filtros, cmpVideosByLikes)
     
     return sorted_list
