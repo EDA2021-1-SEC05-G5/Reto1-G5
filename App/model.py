@@ -34,214 +34,315 @@ from DISClib.Algorithms.Sorting import mergesort
 from DISClib.Algorithms.Sorting import quicksort
 import time
 assert cf
-
+import time
+ 
 """
-Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
-los mismos.
+Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, 
+otra para las categorias de los mismos.
 """
 
 # Construccion de modelos
 
-def newCatalog(opcion):
+def newCatalog():
     """
-    Inicializa el catálogo de libros. Crea una lista vacia para guardar
-    todos los libros, adicionalmente, crea una lista vacia para los autores,
-    una lista vacia para los generos y una lista vacia para la asociación
-    generos y libros. Retorna el catalogo inicializado.
+    Inicializa el catálogo de videos. Crea una lista vacia para guardar
+    todos los videos, adicionalmente, crea una lista vacia para los videos,
+    una lista vacia para los views y una lista vacia para las categorias de 
+    los videos. Retorna el catalogo inicializado.
     """
-    catalog = {'title': None,
-               #'channel_title': None,
+    catalog = {'videos': None,
                'views': None,
-               #'video_tags': None
+               'category': None
                 }
 
-    if opcion == "ARRAY_LIST":
-        catalog['title'] = lt.newList("ARRAY_LIST", cmpfunction = comparevideo_id)
-        #catalog['channel_title'] = lt.newList('ARRAY_LIST',
-                                    #cmpfunction=comparechannel_titles)
-        #catalog['views'] = lt.newList('ARRAY_LIST',
-                                 #cmpfunction=cmpVideosByViews)
-        #catalog['videos_tags'] = lt.newList('ARRAY_LIST')
-    elif opcion == "LINKED_LIST":
-        catalog['title'] = lt.newList("LINKED_LIST", cmpfunction = comparevideo_id)
-        #catalog['channel_title'] = lt.newList('LINKED_LIST',
-                                    #cmpfunction=comparechannel_titles)
-        #catalog['views'] = lt.newList('LINKED_LIST',
-         #                        cmpfunction=cmpVideosByViews)
-        #catalog['videos_tags'] = lt.newList('LINKED_LIST')
+    catalog['videos'] = lt.newList("ARRAY_LIST", cmpfunction = comparevideo_id1)
+    catalog['category'] = lt.newList("ARRAY_LIST", cmpfunction = comparevideo_id1)
 
     return catalog
+
 
 
 
 # Funciones para agregar informacion al catalogo 
 
 def addVideo(catalog, video):
-    # Se adiciona el libro a la lista de libros
-    lt.addLast(catalog['title'], video)
-    # Se obtienen los autores del libro
-    #channel_titles = video['channel_title'].split(",")
-    # Cada autor, se crea en la lista de libros del catalogo, y se
-    # crea un libro en la lista de dicho autor (apuntador al libro)
-    #for channel_title in channel_titles:
-    #    addVideoChannel_title(catalog, channel_title.strip(), video)
-
-"""
-def addVideoChannel_title(catalog, authorname, video):
-    
-    #Adiciona un autor a lista de autores, la cual guarda referencias
-    #a los libros de dicho autor
-    
-    channel_titles = catalog['channel_title']
-    poschannel_title = lt.isPresent(channel_titles, authorname)
-    if poschannel_title > 0:
-        channel_title = lt.getElement(channel_titles, poschannel_title)
-    else:
-        channel_title = newchannel_title(authorname)
-        lt.addLast(channel_titles, channel_title)
-    lt.addLast(channel_title['title'], video)
-"""
-"""
-def addTag(catalog, tag):
-    
-    #Adiciona un tag a la lista de tags
-    
-    t = newTag(tag['tag_name'], tag['tag_id'])
-    lt.addLast(catalog['tags'], t)
-"""
-"""
-def addVideoTag(catalog, videotag):
-    
-    #Adiciona un tag a la lista de tags
-    
-    t = newVideoTag(videotag['tag_id'], videotag['video_id'])
-    lt.addLast(catalog['video_tags'], t)
-"""
-
-
-# Funciones para creacion de datos
-
-def newchannel_title(name):
     """
-    Crea una nueva estructura para modelar los libros de
-    un autor y su promedio de ratings
+    Añade un video al final, de la lista recibida
     """
-    channel_title = {'name': "", "video": None,  "likes": 0}
-    channel_title['name'] = name
-    channel_title['title'] = lt.newList('ARRAY_LIST')
-    return channel_title
+    lt.addLast(catalog['videos'], video)
 
 
-def newTag(name, id):
+def addCategory(catalog, category):
     """
-    Esta estructura almancena los tags utilizados para marcar libros.
+    Añade una categoria al final, de la lista recibida
     """
-    tag = {'name': '', 'tag_id': ''}
-    tag['name'] = name
-    tag['tag_id'] = id
-    return tag
+    lt.addLast(catalog['category'], category)
 
 
-def newBookTag(tag_id, video_id):
-    """
-    Esta estructura crea una relación entre un tag y
-    los libros que han sido marcados con dicho tag.
-    """
-    videotag = {'tag_id': tag_id, 'video_id': video_id}
-    return videotag
 
 
 
 # Funciones de consulta
 
-def getVideosByChannel_title(catalog, authorname):
+#1 y 3
+def get_id_categoria (categoria, catalog):
     """
-    Retorna un autor con sus libros a partir del nombre del autor
+    Busca una categoria en especifica del catalog, y retorna su respectivo id
     """
-    poschannel_title = lt.isPresent(catalog['channel_title'], authorname)
-    if poschannel_title > 0:
-        channel_title = lt.getElement(catalog['channel_title'], poschannel_title)
-        return channel_title
-    return None
+    id_categoria = None
+
+    for cate in lt.iterator(catalog['category']):
+        if cate['name'].strip() == categoria: 
+            id_categoria = int(cate['id'])
+            break
+
+    return id_categoria
+
+#1
+def filtrar_pais_categoria (id_categoria, pais, catalog):
+    """
+    Crea una lista nueva para ordenar los datos segun su id.
+    Y recorre la lista dada, para guardar en la nueva lista 
+    solo los videos que correspondan con el id y el pais
+    """
+    nueva_lista = lt.newList("ARRAY_LIST", cmpfunction = comparevideo_id1)
+
+    for x in lt.iterator(catalog['videos']):
+        if int(x['category_id']) == id_categoria and str(x['country'].strip()) == pais:
+            lt.addLast(nueva_lista, x)
+
+    return nueva_lista
+
+#2
+def filtrar_pais (pais, catalog):
+    """
+    Crea una lista nueva para ordenar los datos segun su id.
+    Y recorre la lista dada, para guardar en la nueva lista 
+    solo los videos que correspondan con el respectivo pais
+    """
+    lista_pais = lt.newList("ARRAY_LIST", cmpfunction = comparevideo_id1)
+
+    for x in lt.iterator(catalog['videos']):
+        if str(x['country'].strip()) == pais:
+            lt.addLast(lista_pais, x)
+        
+    return lista_pais
+
+#2
+def getTendencia2(sorted_list):
+
+    mayor = lt.firstElement(sorted_list)
+    conteo = 0
+
+    sig = None
+    conteo_sig = 0
+
+    for x in lt.iterator(sorted_list):
+        if x['video_id'] == mayor["video_id"]:
+            conteo += 1
+ 
+        elif sig == None: 
+            sig = x
+            conteo_sig += 1
+
+        elif x['video_id'] == sig["video_id"]:
+                conteo_sig += 1
+                
+        else:
+            if conteo_sig > conteo:
+                mayor = sig
+                conteo = conteo_sig
+            sig = x
+            conteo_sig = 1
+
+    return mayor, conteo
+
+#3
+def filtrar_categoria (id_categoria, catalog):
+    """
+    Crea una lista nueva para ordenar los datos segun su id y su trending date.
+    Y recorre la lista dada, para guardar en la nueva lista 
+    solo los videos que correspondan con el respectivo id
+    Ignorando los que su id sea "#NANE?"
+    """
+    nueva_lista = lt.newList("ARRAY_LIST", cmpfunction = cmpVideosByID_date)
+
+    for x in lt.iterator(catalog['videos']):
+        if x['video_id'] == '#NAME?':
+            pass        
+        else:
+            if int(x['category_id']) == id_categoria:
+                lt.addLast(nueva_lista, x)
+
+    return nueva_lista   
+
+#3
+def getTendencia3 (sorted_list):
+
+    mayor = lt.firstElement(sorted_list)
+    conteo = 1
+
+    sig = None
+    conteo_sig = 1
+
+    for x in lt.iterator(sorted_list):
+        if x['video_id'] == mayor["video_id"]:
+            if x['trending_date'] != mayor["trending_date"]:
+                conteo += 1
+ 
+        elif sig == None: 
+            sig = x
+            conteo_sig += 1
+
+        elif x['video_id'] == sig["video_id"]:
+            if x['trending_date'] != sig["trending_date"]:
+                conteo_sig += 1
+                
+        else:
+            if conteo_sig > conteo:
+                mayor = sig
+                conteo = conteo_sig
+            sig = x
+            conteo_sig = 1
+
+    return mayor, conteo
+
+#4
+def filtrar_pais_tag (tag, pais, catalog):
+    """
+    Crea una lista nueva para ordenar los datos segun sus likes.
+    Y recorre la lista dada, para guardar en la nueva lista 
+    solo los videos que correspondan con el pais dado,
+    y que tengan en sus id's el id dado.
+    Antes de leer los tag, se dividen por "|" para poderlos leer bien
+    """
+    nueva_lista = lt.newList("ARRAY_LIST", cmpfunction = cmpVideosByLikes)
+
+    for x in lt.iterator(catalog['videos']):
+        if str(x['country'].strip()) == pais:
+            lista_tags = (x['tags'].split("|"))
+            for y in lista_tags:
+                if tag in str(y):
+                    lt.addLast(nueva_lista, x)
+
+    return nueva_lista
+
+#4
+def acortar_lista (sorted_list, cantidad):
+    """
+    Crea una lista nueva para ordenar los datos segun sus likes.
+    Y va guardando unicamente los datos que tienen diferente title
+    """
+    lista_final = lt.newList("ARRAY_LIST", cmpfunction = cmpVideosByLikes)
+    
+    for x in lt.iterator(sorted_list):
+        if lt.isEmpty(lista_final):
+            lt.addLast(lista_final, x)
+        else:
+            cond = True
+            for y in lt.iterator(lista_final):
+                if y['title'] == x['title']:
+                    cond = False
+            if cond == True:
+                lt.addLast(lista_final, x)
+                if lt.size(lista_final) == cantidad: 
+                    break
+        if lt.size(lista_final) == cantidad:
+            break
+
+    return lista_final
 
 
-def getBestVideos(catalog, number):
-    """
-    Retorna los mejores videos
-    """
-    videos = catalog['title']
-    bestvideos = lt.newList()
-    for cont in range(1, number+1):
-        video = lt.getElement(videos, cont)
-        lt.addLast(bestvideos, video)
-    return bestvideos
 
-
-def countVideosByTag(catalog, tag):
-    """
-    Retorna los libros que fueron etiquetados con el tag
-    """
-    tags = catalog['tags']
-    videocount = 0
-    pos = lt.isPresent(tags, tag)
-    if pos > 0:
-        tag_element = lt.getElement(tags, pos)
-        if tag_element is not None:
-            for video_tag in lt.iterator(catalog['video_tags']):
-                if tag_element['tag_id'] == video_tag['tag_id']:
-                    videocount += 1
-    return videocount
 
 
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
-def comparechannel_titles(channel_titlename1, channel_title):
-    if (channel_titlename1.lower() in channel_title['name'].lower()):
-        return 0
-    return -1
+def comparevideo_id1(video1, video2):
+    """
+    Devuelve verdadero (True) si los 'id' de video1 son menores que los del video2
+    Args:
+    video1: informacion del primer video que incluye su valor 'video_id'
+    video2: informacion del segundo video que incluye su valor 'video_id'
+    """
+    return video1["video_id"] < video2["video_id"]
 
-
-#
-
-def comparevideo_id(video_id, video):
-    return video_id == video["video_id"]
-
-#
-
+def cmpVideosByID_date (video1, video2):
+    """
+    Devuelve verdadero (True) si los 'id' de video1 son menores que los del video2
+    Args:
+    video1: informacion del primer video que incluye su valor 'video_id'
+    video2: informacion del segundo video que incluye su valor 'video_id'
+    Y si los id son iguales los compara por su trending date
+    """
+    if video1['video_id'] != video2['video_id']:
+        return video1["video_id"] < video2["video_id"]   
+    else:
+        return video1["trending_date"] < video2["trending_date"]
 
 def cmpVideosByViews(video1, video2):
     """
-    Devuelve verdadero (True) si los 'views' de video1 son menores que los del video2
+    Devuelve verdadero (True) si los 'views' de video1 son mayores que los del video2
     Args:
     video1: informacion del primer video que incluye su valor 'views'
     video2: informacion del segundo video que incluye su valor 'views'
     """
-    return (float(video1['views']) < float(video2['views']))
+    return (float(video1['views']) > float(video2['views']))
+
+def cmpVideosByLikes(video1, video2):
+    """
+    Devuelve verdadero (True) si los 'likes' de video1 son mayores que los del video2
+    Args:
+    video1: informacion del primer video que incluye su valor 'likes'
+    video2: informacion del segundo video que incluye su valor 'likes'
+    """
+    return (float(video1['likes']) > float(video2['likes']))
 
 
-def comparetagnames(name, tag):
-    return (name == tag['name'])
 
 
 
 # Funciones de ordenamiento
 
-def sortVideos(size, catalog, ordena):
-    sub_list = lt.subList(catalog['title'], 1, size)
-    sub_list = sub_list.copy()
-    start_time = time.process_time() 
+#1
+def sortVideosByViews (lista_filtros, cantidad):
+    """
+    Ordena la lista recibida organizando los datos segun sus Views
+    Y crea una lista nueva para guardar los datos allí, para retornar su copia
+    """
+    sorted_list = mergesort.sort(lista_filtros, cmpVideosByViews)
 
-    if ordena == "selection":
-        sorted_list = selectionsort.sort(sub_list, cmpVideosByViews)
-    elif ordena == "insertion":
-        sorted_list = insertionsort.sort(sub_list, cmpVideosByViews)
-    elif ordena == "merge":
-        sorted_list = mergesort.sort(sub_list, cmpVideosByViews)
-    elif ordena == "quick":
-        sorted_list = quicksort.sort(sub_list, cmpVideosByViews)
-    else:
-        sorted_list = sa.sort(sub_list, cmpVideosByViews)
-    stop_time = time.process_time()
-    elapsed_time_mseg = (stop_time - start_time)*1000
-    return elapsed_time_mseg, sorted_list
+    sub_list = lt.subList(sorted_list, 1, cantidad)
+    sub_list = sub_list.copy()
+
+    return sub_list
+
+#2
+def sortVideosByID (filtro_pais):
+    """
+    Ordena la lista recibida organizando los datos segun sus id
+    """
+    sorted_list = mergesort.sort(filtro_pais, comparevideo_id1)
+
+    return sorted_list 
+
+#3
+def sortVideosByID_date (filtro_categoria):
+    """
+    Ordena la lista recibida organizando los datos segun sus id o sus trending date
+    """
+    sorted_list = mergesort.sort(filtro_categoria, cmpVideosByID_date)
+
+    return sorted_list
+
+#4
+def sortVideosByLikes (lista_filtros):
+    """
+    Ordena la lista recibida organizando los datos segun sus Likes
+    """
+    sorted_list = mergesort.sort(lista_filtros, cmpVideosByLikes)
+    
+    return sorted_list
+
+
